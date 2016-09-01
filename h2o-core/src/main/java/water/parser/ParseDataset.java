@@ -896,10 +896,12 @@ public final class ParseDataset {
     private FVecParseWriter streamParse(final InputStream is, final ParseSetup localSetup,FVecParseWriter dout, InputStream bvs) throws IOException {
       // All output into a fresh pile of NewChunks, one per column
       Parser p = localSetup.parser(_jobKey);
-      if(!localSetup._parse_type.isParallelParseSupported())
-        throw H2O.unimpl();
+
       // assume 2x inflation rate
-      p.streamParseZip(is, dout, bvs);
+      if(localSetup._parse_type.isParallelParseSupported())
+        p.streamParseZip(is, dout, bvs);
+      else
+        p.streamParse(is,dout);
       // Parse all internal "chunks", until we drain the zip-stream dry.  Not
       // real chunks, just flipping between 32K buffers.  Fills up the single
       // very large NewChunk.
