@@ -109,6 +109,11 @@ public class ByteVec extends Vec {
         return len;
       }
     };
+    try {
+      is.available();
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
     return is;
   }
 }
